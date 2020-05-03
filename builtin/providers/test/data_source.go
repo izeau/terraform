@@ -1,8 +1,6 @@
 package test
 
 import (
-	"time"
-
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -47,7 +45,7 @@ func testDataSource() *schema.Resource {
 }
 
 func testDataSourceRead(d *schema.ResourceData, meta interface{}) error {
-	d.SetId(time.Now().UTC().String())
+	d.SetId("data")
 	d.Set("list", []interface{}{"one", "two", "three"})
 
 	if input, hasInput := d.GetOk("input"); hasInput {
