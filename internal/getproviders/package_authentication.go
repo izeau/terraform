@@ -37,14 +37,27 @@ type PackageAuthenticationResult struct {
 
 func (t *PackageAuthenticationResult) String() string {
 	if t == nil {
-		return "unauthenticated"
+		return "unsigned"
 	}
 	return []string{
 		"verified checksum",
-		"official provider",
-		"partner provider",
-		"community provider",
+		"signed by HashiCorp",
+		"signed by trusted partner",
+		"self-signed",
 	}[t.result]
+}
+
+// ThirdPartySigned returns whether the package was authenticated as signed by a party
+// other than HashiCorp.
+func (t *PackageAuthenticationResult) ThirdPartySigned() bool {
+	if t == nil {
+		return false
+	}
+	if t.result == partnerProvider || t.result == communityProvider {
+		return true
+	}
+
+	return false
 }
 
 // SigningKey represents a key used to sign packages from a registry, along

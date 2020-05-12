@@ -107,6 +107,10 @@ type InstallerEvents struct {
 	FetchPackageRetry   func(provider addrs.Provider, version getproviders.Version, err error)
 	FetchPackageFailure func(provider addrs.Provider, version getproviders.Version, err error)
 
+	// The ProvidersFetched event is called after all fetch operations if at
+	// least one provider was fetched successfully.
+	ProvidersFetched func(authResults map[addrs.Provider]*getproviders.PackageAuthenticationResult)
+
 	// HashPackageFailure is called if the installer is unable to determine
 	// the hash of the contents of an installed package after installation.
 	// In that case, the selection will not be recorded in the target cache

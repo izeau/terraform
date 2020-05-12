@@ -519,6 +519,18 @@ func (c *InitCommand) getProviders(earlyConfig *earlyconfig.Config, state *state
 
 			c.Ui.Info(fmt.Sprintf("- Installed %s v%s (%s)%s", provider.ForDisplay(), version, authResult, warning))
 		},
+		ProvidersFetched: func(authResults map[addrs.Provider]*getproviders.PackageAuthenticationResult) {
+			thirdPartySigned := false
+			for _, authResult := range authResults {
+				if authResult.ThirdPartySigned() {
+					thirdPartySigned = true
+					break
+				}
+			}
+			if thirdPartySigned {
+				c.Ui.Info(fmt.Sprintf("\nYou have initialized providers which are signed by third parties, you can read more about Terraform's signature verification: https://www.terraform.io/docs/signing.html"))
+			}
+		},
 	}
 
 	mode := providercache.InstallNewProvidersOnly
