@@ -263,6 +263,13 @@ func (n *EvalReadDataRefresh) Eval(ctx EvalContext) (interface{}, error) {
 		return nil, diags.ErrWithWarnings()
 	}
 
+	if err := ctx.Hook(func(h Hook) (HookAction, error) {
+		return h.PreRefresh(absAddr, states.CurrentGen, priorVal)
+	}); err != nil {
+		diags = diags.Append(err)
+		return nil, diags.ErrWithWarnings()
+	}
+
 	newVal, readDiags := n.readDataSource(ctx, configVal)
 	diags = diags.Append(readDiags)
 	if diags.HasErrors() {
